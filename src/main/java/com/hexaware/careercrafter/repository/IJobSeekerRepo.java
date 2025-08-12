@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IJobSeekerRepo extends JpaRepository<JobSeeker, Integer> {
 
-    List<JobSeeker> findBySkillsContaining(String skill); 
+    
 }

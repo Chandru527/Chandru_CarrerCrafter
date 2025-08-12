@@ -1,6 +1,8 @@
 package com.hexaware.careercrafter.entities;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -9,12 +11,14 @@ public class JobListing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int jobId;
+    private int jobListingId;
 
     private String title;
     private String description;
     private String qualifications;
     private String location;
+    private double salary; 
+    private LocalDate postedDate;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
@@ -24,23 +28,29 @@ public class JobListing {
     private List<Application> applications;
 
     public JobListing() {}
+    
 
-    public JobListing(int jobId, String title, String description, String qualifications, String location, Employee employee) {
-        this.jobId = jobId;
-        this.title = title;
-        this.description = description;
-        this.qualifications = qualifications;
-        this.location = location;
-        this.employee = employee;
-    }
+    public JobListing(int jobListingId, String title, String description, String qualifications, String location,
+			double salary, LocalDate postedDate, Employee employee, List<Application> applications) {
+    	
+		this.jobListingId = jobListingId;
+		this.title = title;
+		this.description = description;
+		this.qualifications = qualifications;
+		this.location = location;
+		this.salary = salary;
+		this.postedDate = postedDate;
+		this.employee = employee;
+		this.applications = applications;
+	}
 
    
-    public int getJobId() {
-        return jobId;
+    public int getJobListingId() {
+        return jobListingId;
     }
 
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
+    public void setJobListingId(int jobListingId) {
+        this.jobListingId = jobListingId;
     }
 
     public String getTitle() {
@@ -74,8 +84,25 @@ public class JobListing {
     public void setLocation(String location) {
         this.location = location;
     }
+    
 
-    public Employee getEmployee() {
+    public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	public LocalDate getPostedDate() {
+		return postedDate;
+	}
+
+	public void setPostedDate(LocalDate postedDate) {
+		this.postedDate = postedDate;
+	}
+
+	public Employee getEmployee() {
         return employee;
     }
 

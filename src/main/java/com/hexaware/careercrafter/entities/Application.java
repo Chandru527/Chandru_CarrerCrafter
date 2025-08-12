@@ -1,5 +1,7 @@
 package com.hexaware.careercrafter.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,9 +13,13 @@ public class Application {
     private int applicationId;
 
     private String status;
+    private LocalDate applicationDate;
+    @Column(length = 500)
+    private String filePath;
 
-    @ManyToOne
-    @JoinColumn(name = "job_id", referencedColumnName = "jobId")
+    
+	@ManyToOne
+    @JoinColumn(name = "job_listing_id", referencedColumnName = "jobListingId")
     private JobListing jobListing;
 
     @ManyToOne
@@ -22,16 +28,20 @@ public class Application {
 
   
     public Application() {}
-
-    public Application(int applicationId, String status, JobListing jobListing, JobSeeker jobSeeker) {
-        this.applicationId = applicationId;
-        this.status = status;
-        this.jobListing = jobListing;
-        this.jobSeeker = jobSeeker;
-    }
-
    
-    public int getApplicationId() {
+   
+    public Application(int applicationId, String status, LocalDate applicationDate, String filePath,
+			JobListing jobListing, JobSeeker jobSeeker) {
+		this.applicationId = applicationId;
+		this.status = status;
+		this.applicationDate = applicationDate;
+		this.filePath = filePath;
+		this.jobListing = jobListing;
+		this.jobSeeker = jobSeeker;
+	}
+
+
+	public int getApplicationId() {
         return applicationId;
     }
 
@@ -46,8 +56,26 @@ public class Application {
     public void setStatus(String status) {
         this.status = status;
     }
+    public LocalDate getApplicationDate() {
+		return applicationDate;
+	}
 
-    public JobListing getJobListing() {
+	public void setApplicationDate(LocalDate applicationDate) {
+		this.applicationDate = applicationDate;
+	}
+
+
+    public String getFilePath() {
+		return filePath;
+	}
+
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+
+	public JobListing getJobListing() {
         return jobListing;
     }
 

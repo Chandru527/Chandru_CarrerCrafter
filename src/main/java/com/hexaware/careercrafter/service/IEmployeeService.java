@@ -1,11 +1,12 @@
 package com.hexaware.careercrafter.service;
 
-import com.hexaware.careercrafter.entities.Employee;
 import java.util.List;
+import com.hexaware.careercrafter.dto.EmployeeDto;
 
 public interface IEmployeeService {
-    Employee saveEmployee(Employee employee);
-    Employee getEmployeeById(int id);
-    List<Employee> getAllEmployees();
+    EmployeeDto createEmployee(EmployeeDto employeeDto);
+    EmployeeDto getEmployeeById(int id);
+    List<EmployeeDto> getAllEmployees();
+    EmployeeDto updateEmployee(int id, EmployeeDto employeeDto);
     void deleteEmployee(int id);
 }

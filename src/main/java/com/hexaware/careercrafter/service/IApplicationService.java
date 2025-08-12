@@ -1,11 +1,12 @@
 package com.hexaware.careercrafter.service;
 
-import com.hexaware.careercrafter.entities.Application;
 import java.util.List;
+import com.hexaware.careercrafter.dto.ApplicationDto;
 
 public interface IApplicationService {
-    Application saveApplication(Application application);
-    Application getApplicationById(int id);
-    List<Application> getAllApplications();
+    ApplicationDto createApplication(ApplicationDto applicationDto);
+    ApplicationDto getApplicationById(int id);
+    List<ApplicationDto> getAllApplications();
+    ApplicationDto updateApplication(int id, ApplicationDto applicationDto);
     void deleteApplication(int id);
 }

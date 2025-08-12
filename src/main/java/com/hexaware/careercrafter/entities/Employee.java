@@ -12,6 +12,7 @@ public class Employee {
 
     private String companyName;
     private String companyDescription;
+    private String position;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
@@ -19,13 +20,16 @@ public class Employee {
 
    
     public Employee() {}
+    
 
-    public Employee(int employeeId, String companyName, String companyDescription, User user) {
-        this.employeeId = employeeId;
-        this.companyName = companyName;
-        this.companyDescription = companyDescription;
-        this.user = user;
-    }
+    public Employee(int employeeId, String companyName, String companyDescription, String position, User user) {
+		
+		this.employeeId = employeeId;
+		this.companyName = companyName;
+		this.companyDescription = companyDescription;
+		this.position = position;
+		this.user = user;
+	}
 
 
     public int getEmployeeId() {
@@ -52,7 +56,15 @@ public class Employee {
         this.companyDescription = companyDescription;
     }
 
-    public User getUser() {
+    public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public User getUser() {
         return user;
     }
 

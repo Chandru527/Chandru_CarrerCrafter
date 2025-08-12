@@ -30,14 +30,19 @@ public class User {
 
   
     public User() {}
+    
 
-    public User(int userId, String name, String email, String password, String role) {
-        this.userId = userId;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    public User(int userId, String name, String email, String password, String role, Employee employee,
+			JobSeeker jobSeeker) {
+		super();
+		this.userId = userId;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.employee = employee;
+		this.jobSeeker = jobSeeker;
+	}
 
    
     public int getUserId() {

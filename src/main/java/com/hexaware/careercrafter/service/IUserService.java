@@ -1,11 +1,12 @@
 package com.hexaware.careercrafter.service;
 
-import com.hexaware.careercrafter.entities.User;
 import java.util.List;
+import com.hexaware.careercrafter.dto.UserDto;
 
 public interface IUserService {
-    User saveUser(User user);
-    User getUserById(int id);
-    List<User> getAllUsers();
+    UserDto createUser(UserDto userDto);
+    UserDto getUserById(int id);
+    List<UserDto> getAllUsers();
+    UserDto updateUser(int id, UserDto userDto);
     void deleteUser(int id);
 }

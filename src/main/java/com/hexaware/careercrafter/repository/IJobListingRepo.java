@@ -6,7 +6,5 @@ import java.util.List;
 
 public interface IJobListingRepo extends JpaRepository<JobListing, Integer> {
 
-    List<JobListing> findByLocation(String location); 
-
-    List<JobListing> findByTitleContaining(String keyword); 
+   
 }

@@ -2,6 +2,9 @@ package com.hexaware.careercrafter.dto;
 
 import jakarta.validation.constraints.*;
 
+import lombok.Data;
+
+@Data
 public class UserDto {
 
     private int userId;
@@ -10,7 +13,7 @@ public class UserDto {
     @Size(min = 2, max = 50)
     private String name;
 
-    @Email(message = "Email must be valid")
+    @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     private String email;
 
@@ -21,6 +24,4 @@ public class UserDto {
     @NotBlank(message = "Role is required")
     @Pattern(regexp = "^(employee|job_seeker)$", message = "Role must be 'employee' or 'job_seeker'")
     private String role;
-
-    // Getters & Setters
 }

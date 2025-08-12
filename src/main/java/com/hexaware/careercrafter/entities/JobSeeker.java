@@ -10,7 +10,7 @@ public class JobSeeker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int jobSeekerId;
-
+    private String fullName;
     private String education;
     private String experience;
     private String skills;
@@ -24,17 +24,26 @@ public class JobSeeker {
 
     @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL)
     private List<Application> applications;
+    
+    @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL)
+    private List<JobSearch> jobSearches;
+
 
    
     public JobSeeker() {}
+    
 
-    public JobSeeker(int jobSeekerId, String education, String experience, String skills, User user) {
-        this.jobSeekerId = jobSeekerId;
-        this.education = education;
-        this.experience = experience;
-        this.skills = skills;
-        this.user = user;
-    }
+    public JobSeeker(int jobSeekerId, String fullName, String education, String experience, String skills, User user,
+			Resume resume, List<Application> applications) {
+		this.jobSeekerId = jobSeekerId;
+		this.fullName = fullName;
+		this.education = education;
+		this.experience = experience;
+		this.skills = skills;
+		this.user = user;
+		this.resume = resume;
+		this.applications = applications;
+	}
 
 
     public int getJobSeekerId() {
@@ -44,8 +53,17 @@ public class JobSeeker {
     public void setJobSeekerId(int jobSeekerId) {
         this.jobSeekerId = jobSeekerId;
     }
+    
 
-    public String getEducation() {
+    public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getEducation() {
         return education;
     }
 

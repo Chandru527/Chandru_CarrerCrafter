@@ -1,5 +1,7 @@
 package com.hexaware.careercrafter.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class Resume {
     private int resumeId;
 
     private String filePath;
+    private LocalDate uploadDate;
 
     @OneToOne
     @JoinColumn(name = "job_seeker_id", referencedColumnName = "jobSeekerId")
@@ -18,12 +21,15 @@ public class Resume {
 
     
     public Resume() {}
+    
 
-    public Resume(int resumeId, String filePath, JobSeeker jobSeeker) {
-        this.resumeId = resumeId;
-        this.filePath = filePath;
-        this.jobSeeker = jobSeeker;
-    }
+    public Resume(int resumeId, String filePath, LocalDate uploadDate, JobSeeker jobSeeker) {
+		super();
+		this.resumeId = resumeId;
+		this.filePath = filePath;
+		this.uploadDate = uploadDate;
+		this.jobSeeker = jobSeeker;
+	}
 
  
     public int getResumeId() {
@@ -45,8 +51,17 @@ public class Resume {
     public JobSeeker getJobSeeker() {
         return jobSeeker;
     }
+    
 
-    public void setJobSeeker(JobSeeker jobSeeker) {
+    public LocalDate getUploadDate() {
+		return uploadDate;
+	}
+
+	public void setUploadDate(LocalDate uploadDate) {
+		this.uploadDate = uploadDate;
+	}
+
+	public void setJobSeeker(JobSeeker jobSeeker) {
         this.jobSeeker = jobSeeker;
     }
 }
