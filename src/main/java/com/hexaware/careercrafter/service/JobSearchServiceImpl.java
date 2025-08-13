@@ -10,6 +10,8 @@ import com.hexaware.careercrafter.repository.IJobListingRepo;
 import com.hexaware.careercrafter.repository.IJobSearchRepo;
 import com.hexaware.careercrafter.repository.IJobSeekerRepo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class JobSearchServiceImpl implements IJobSearchService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JobSearchServiceImpl.class); // 🔹 Logger
 
     @Autowired
     private IJobSearchRepo jobSearchRepo;
@@ -31,40 +35,56 @@ public class JobSearchServiceImpl implements IJobSearchService {
 
     @Override
     public JobSearchDto createSearch(JobSearchDto dto) {
+        logger.info("Creating JobSearch for JobSeekerId: {}", dto.getJobSeekerId());
         JobSeeker jobSeeker = jobSeekerRepo.findById(dto.getJobSeekerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job Seeker not found"));
+                .orElseThrow(() -> {
+                    logger.error("JobSeeker not found with id: {}", dto.getJobSeekerId());
+                    return new ResourceNotFoundException("Job Seeker not found");
+                });
 
         JobSearch search = new JobSearch();
         search.setJobSeeker(jobSeeker);
         search.setKeywords(dto.getKeywords());
         search.setLocation(dto.getLocation());
         search.setIndustry(dto.getIndustry());
-        search.setRecommendedJobs(dto.getRecommendedJobs()); // optional
+        search.setRecommendedJobs(dto.getRecommendedJobs());
         search.setSearchDate(LocalDate.now().toString());
 
         JobSearch saved = jobSearchRepo.save(search);
+        logger.debug("JobSearch saved successfully: {}", saved);
         return mapToDto(saved);
     }
 
     @Override
     public JobSearchDto getSearchById(int id) {
+        logger.info("Fetching JobSearch by id: {}", id);
         JobSearch search = jobSearchRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job search not found"));
+                .orElseThrow(() -> {
+                    logger.error("Job search not found with id: {}", id);
+                    return new ResourceNotFoundException("Job search not found");
+                });
         return mapToDto(search);
     }
 
     @Override
     public List<JobSearchDto> getSearchesByJobSeeker(int jobSeekerId) {
-        return jobSearchRepo.findByJobSeeker_JobSeekerId(jobSeekerId)
+        logger.info("Fetching JobSearches for JobSeekerId: {}", jobSeekerId);
+        List<JobSearchDto> searches = jobSearchRepo.findByJobSeeker_JobSeekerId(jobSeekerId)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        logger.debug("Total JobSearches found: {}", searches.size());
+        return searches;
     }
 
     @Override
     public JobSearchDto updateSearch(JobSearchDto dto) {
+        logger.info("Updating JobSearch with id: {}", dto.getSearchId());
         JobSearch existing = jobSearchRepo.findById(dto.getSearchId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job search not found"));
+                .orElseThrow(() -> {
+                    logger.error("Job search not found with id: {}", dto.getSearchId());
+                    return new ResourceNotFoundException("Job search not found");
+                });
 
         existing.setKeywords(dto.getKeywords());
         existing.setLocation(dto.getLocation());
@@ -72,29 +92,38 @@ public class JobSearchServiceImpl implements IJobSearchService {
         existing.setRecommendedJobs(dto.getRecommendedJobs());
 
         JobSearch updated = jobSearchRepo.save(existing);
+        logger.debug("JobSearch updated successfully: {}", updated);
         return mapToDto(updated);
     }
 
     @Override
     public void deleteSearch(int id) {
+        logger.info("Deleting JobSearch with id: {}", id);
         if (!jobSearchRepo.existsById(id)) {
+            logger.error("JobSearch not found with id: {}", id);
             throw new ResourceNotFoundException("Job search not found");
         }
         jobSearchRepo.deleteById(id);
+        logger.info("JobSearch deleted successfully with id: {}", id);
     }
 
     @Override
     public List<JobListingDto> recommendJobs(JobSearchDto dto) {
-        // Find matching jobs without saving to DB
-        return jobListingRepo.findAll().stream()
+        logger.info("Recommending jobs for keywords: '{}' and location: {}",
+                dto.getKeywords(), dto.getLocation());
+
+        List<JobListingDto> recommended = jobListingRepo.findAll().stream()
                 .filter(job -> job.getTitle().toLowerCase().contains(dto.getKeywords().toLowerCase())
                         || job.getDescription().toLowerCase().contains(dto.getKeywords().toLowerCase()))
                 .filter(job -> dto.getLocation() == null || job.getLocation().equalsIgnoreCase(dto.getLocation()))
                 .map(this::mapJobToDto)
                 .collect(Collectors.toList());
+
+        logger.debug("Total recommended jobs: {}", recommended.size());
+        return recommended;
     }
 
-    // --- Mapping Helpers ---
+   
     private JobSearchDto mapToDto(JobSearch search) {
         JobSearchDto dto = new JobSearchDto();
         dto.setSearchId(search.getSearchId());

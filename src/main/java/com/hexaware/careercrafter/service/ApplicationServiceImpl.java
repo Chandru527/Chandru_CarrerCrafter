@@ -3,6 +3,8 @@ package com.hexaware.careercrafter.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import com.hexaware.careercrafter.repository.IJobSeekerRepo;
 @Service
 public class ApplicationServiceImpl implements IApplicationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationServiceImpl.class); // 🔹 Logger
+
     @Autowired
     private IApplicationRepo applicationRepo;
 
@@ -30,33 +34,47 @@ public class ApplicationServiceImpl implements IApplicationService {
 
     @Override
     public ApplicationDto createApplication(ApplicationDto dto) {
+        logger.info("Creating Application for JobSeekerId: {} and JobListingId: {}",
+                dto.getJobSeekerId(), dto.getJobListingId());
         validateApplicationDto(dto);
 
         Application application = mapToEntity(dto);
         Application saved = applicationRepo.save(application);
 
+        logger.debug("Application saved successfully: {}", saved);
         return mapToDto(saved);
     }
 
     @Override
     public ApplicationDto getApplicationById(int id) {
+        logger.info("Fetching Application by id: {}", id);
         Application application = applicationRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + id));
+                .orElseThrow(() -> {
+                    logger.error("Application not found with id: {}", id);
+                    return new ResourceNotFoundException("Application not found with id: " + id);
+                });
         return mapToDto(application);
     }
 
     @Override
     public List<ApplicationDto> getAllApplications() {
-        return applicationRepo.findAll()
+        logger.info("Fetching all Applications");
+        List<ApplicationDto> apps = applicationRepo.findAll()
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        logger.debug("Total applications found: {}", apps.size());
+        return apps;
     }
 
     @Override
     public ApplicationDto updateApplication(int id, ApplicationDto dto) {
+        logger.info("Updating Application with id: {}", id);
         Application existing = applicationRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + id));
+                .orElseThrow(() -> {
+                    logger.error("Application not found with id: {}", id);
+                    return new ResourceNotFoundException("Application not found with id: " + id);
+                });
 
         if (dto.getStatus() != null && !dto.getStatus().isBlank()) {
             existing.setStatus(dto.getStatus());
@@ -69,39 +87,52 @@ public class ApplicationServiceImpl implements IApplicationService {
         }
         if (dto.getJobSeekerId() != null) {
             JobSeeker jobSeeker = jobSeekerRepo.findById(dto.getJobSeekerId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Job seeker not found"));
+                    .orElseThrow(() -> {
+                        logger.error("JobSeeker not found with id: {}", dto.getJobSeekerId());
+                        return new ResourceNotFoundException("Job seeker not found");
+                    });
             existing.setJobSeeker(jobSeeker);
         }
         if (dto.getJobListingId() != null) {
             JobListing jobListing = jobListingRepo.findById(dto.getJobListingId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Job listing not found"));
+                    .orElseThrow(() -> {
+                        logger.error("JobListing not found with id: {}", dto.getJobListingId());
+                        return new ResourceNotFoundException("Job listing not found");
+                    });
             existing.setJobListing(jobListing);
         }
 
-        return mapToDto(applicationRepo.save(existing));
+        Application updated = applicationRepo.save(existing);
+        logger.debug("Application updated successfully: {}", updated);
+        return mapToDto(updated);
     }
 
     @Override
     public void deleteApplication(int id) {
+        logger.info("Deleting Application with id: {}", id);
         if (!applicationRepo.existsById(id)) {
+            logger.error("Application not found with id: {}", id);
             throw new ResourceNotFoundException("Application not found with id: " + id);
         }
         applicationRepo.deleteById(id);
+        logger.info("Application deleted successfully with id: {}", id);
     }
-
-   
 
     private void validateApplicationDto(ApplicationDto dto) {
         if (dto.getStatus() == null || dto.getStatus().isBlank()) {
+            logger.warn("Validation failed: Application status missing");
             throw new InvalidRequestException("Application status is required");
         }
         if (dto.getApplicationDate() == null) {
+            logger.warn("Validation failed: Application date missing");
             throw new InvalidRequestException("Application date is required");
         }
         if (dto.getJobSeekerId() == null) {
+            logger.warn("Validation failed: Job seeker ID missing");
             throw new InvalidRequestException("Job Seeker ID is required");
         }
         if (dto.getJobListingId() == null) {
+            logger.warn("Validation failed: Job listing ID missing");
             throw new InvalidRequestException("Job Listing ID is required");
         }
     }
@@ -125,11 +156,17 @@ public class ApplicationServiceImpl implements IApplicationService {
         application.setFilePath(dto.getFilePath());
 
         JobSeeker jobSeeker = jobSeekerRepo.findById(dto.getJobSeekerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job seeker not found"));
+                .orElseThrow(() -> {
+                    logger.error("JobSeeker not found with id: {}", dto.getJobSeekerId());
+                    return new ResourceNotFoundException("Job seeker not found");
+                });
         application.setJobSeeker(jobSeeker);
 
         JobListing jobListing = jobListingRepo.findById(dto.getJobListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job listing not found"));
+                .orElseThrow(() -> {
+                    logger.error("JobListing not found with id: {}", dto.getJobListingId());
+                    return new ResourceNotFoundException("Job listing not found");
+                });
         application.setJobListing(jobListing);
 
         return application;
