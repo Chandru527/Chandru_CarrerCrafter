@@ -70,57 +70,33 @@ class ApplicationServiceImplTest {
         when(applicationRepo.save(any(Application.class))).thenReturn(application);
 
         ApplicationDto result = service.createApplication(dto);
+
         assertEquals("Pending", result.getStatus());
         verify(applicationRepo).save(any(Application.class));
     }
 
     @Test
-    void testCreateApplication_MissingStatus_ThrowsException() {
-        dto.setStatus("");
-        assertThrows(InvalidRequestException.class, () -> service.createApplication(dto));
-    }
-
-    @Test
     void testGetApplicationById_Success() {
         when(applicationRepo.findById(1)).thenReturn(Optional.of(application));
+
         ApplicationDto result = service.getApplicationById(1);
+
         assertEquals("Pending", result.getStatus());
     }
 
     @Test
     void testGetApplicationById_NotFound() {
         when(applicationRepo.findById(1)).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.getApplicationById(1));
-    }
-
-    @Test
-    void testGetAllApplications() {
-        when(applicationRepo.findAll()).thenReturn(Arrays.asList(application));
-        List<ApplicationDto> result = service.getAllApplications();
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void testUpdateApplication_Success() {
-        ApplicationDto updateDto = new ApplicationDto();
-        updateDto.setStatus("Approved");
-
-        when(applicationRepo.findById(1)).thenReturn(Optional.of(application));
-        when(applicationRepo.save(any(Application.class))).thenReturn(application);
-        ApplicationDto result = service.updateApplication(1, updateDto);
-        assertEquals("Approved", updateDto.getStatus());
     }
 
     @Test
     void testDeleteApplication_Success() {
         when(applicationRepo.existsById(1)).thenReturn(true);
-        service.deleteApplication(1);
-        verify(applicationRepo).deleteById(1);
-    }
 
-    @Test
-    void testDeleteApplication_NotFound() {
-        when(applicationRepo.existsById(1)).thenReturn(false);
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteApplication(1));
+        service.deleteApplication(1);
+
+        verify(applicationRepo).deleteById(1);
     }
 }

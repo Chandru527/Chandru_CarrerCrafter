@@ -10,9 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import org.springframework.web.bind.annotation.*;
+
+
+/*
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,7 +44,15 @@ public class AuthController {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginData.getEmail(), loginData.getPassword())
             );
-            String token = jwtUtil.generateToken(loginData.getEmail());
+
+            // Get user from DB to ensure role is correct
+            User user = userRepo.findByEmail(loginData.getEmail());
+            if (user == null) {
+                return ResponseEntity.status(404).body("User not found");
+            }
+
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
             return ResponseEntity.ok(token);
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(401).body("Invalid credentials");
@@ -49,10 +65,9 @@ public class AuthController {
         if (userRepo.findByEmail(user.getEmail()) != null) {
             return ResponseEntity.badRequest().body("Email already registered!");
         }
-        // Encode the password
+        // Encode the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         return ResponseEntity.ok("User registered successfully!");
     }
-
 }

@@ -3,6 +3,15 @@ package com.hexaware.careercrafter.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+/*
+ * Class Name: JobSeeker
+ * Description: This class represents a job seeker entity
+ *              with personal information, resumes, and applied job details.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
+
 @Entity
 @Table(name = "job_seekers")
 public class JobSeeker {

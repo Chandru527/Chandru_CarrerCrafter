@@ -4,6 +4,14 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
+/*
+ * Class Name: Resume
+ * Description: This class represents a resume entity
+ *              containing the job seeker’s education, experience, and skills details.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 @Entity
 @Table(name = "resumes")
 public class Resume {

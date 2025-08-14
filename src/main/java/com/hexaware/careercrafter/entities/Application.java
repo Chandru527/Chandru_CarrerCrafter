@@ -4,6 +4,14 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
+/*
+ * Class Name: Application
+ * Description: This class represents a job application entity
+ *              containing details about the applicant and the job applied for.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 @Entity
 @Table(name = "applications")
 public class Application {

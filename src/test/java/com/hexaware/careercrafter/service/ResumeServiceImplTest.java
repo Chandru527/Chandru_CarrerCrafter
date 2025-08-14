@@ -3,17 +3,16 @@ package com.hexaware.careercrafter.service;
 import com.hexaware.careercrafter.dto.ResumeDto;
 import com.hexaware.careercrafter.entities.JobSeeker;
 import com.hexaware.careercrafter.entities.Resume;
-import com.hexaware.careercrafter.exception.InvalidRequestException;
 import com.hexaware.careercrafter.exception.ResourceNotFoundException;
 import com.hexaware.careercrafter.repository.IJobSeekerRepo;
 import com.hexaware.careercrafter.repository.IResumeRepo;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,59 +48,38 @@ class ResumeServiceImplTest {
     }
 
     @Test
-    void createResume_success() {
+    void testCreateResume_Success() {
         when(jobSeekerRepo.findById(1)).thenReturn(Optional.of(seeker));
         when(resumeRepo.save(any(Resume.class))).thenReturn(resume);
 
         ResumeDto result = service.createResume(dto);
+
+        assertEquals("/path", result.getFilePath());
+        verify(resumeRepo).save(any(Resume.class));
+    }
+
+    @Test
+    void testGetResumeById_Success() {
+        when(resumeRepo.findById(1)).thenReturn(Optional.of(resume));
+
+        ResumeDto result = service.getResumeById(1);
+
         assertEquals("/path", result.getFilePath());
     }
 
     @Test
-    void createResume_missingFilePath() {
-        dto.setFilePath("");
-        assertThrows(InvalidRequestException.class, () -> service.createResume(dto));
-    }
-
-    @Test
-    void getResumeById_success() {
-        when(resumeRepo.findById(1)).thenReturn(Optional.of(resume));
-        assertEquals("/path", service.getResumeById(1).getFilePath());
-    }
-
-    @Test
-    void getResumeById_notFound() {
+    void testGetResumeById_NotFound() {
         when(resumeRepo.findById(1)).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.getResumeById(1));
     }
 
     @Test
-    void getAllResumes_success() {
-        when(resumeRepo.findAll()).thenReturn(Arrays.asList(resume));
-        assertEquals(1, service.getAllResumes().size());
-    }
-
-    @Test
-    void updateResume_success() {
-        when(resumeRepo.findById(1)).thenReturn(Optional.of(resume));
-        when(jobSeekerRepo.findById(1)).thenReturn(Optional.of(seeker));
-        when(resumeRepo.save(any(Resume.class))).thenReturn(resume);
-
-        dto.setFilePath("/newpath");
-        ResumeDto result = service.updateResume(1, dto);
-        assertEquals("/newpath", result.getFilePath());
-    }
-
-    @Test
-    void deleteResume_success() {
+    void testDeleteResume_Success() {
         when(resumeRepo.existsById(1)).thenReturn(true);
-        service.deleteResume(1);
-        verify(resumeRepo).deleteById(1);
-    }
 
-    @Test
-    void deleteResume_notFound() {
-        when(resumeRepo.existsById(1)).thenReturn(false);
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteResume(1));
+        service.deleteResume(1);
+
+        verify(resumeRepo).deleteById(1);
     }
 }

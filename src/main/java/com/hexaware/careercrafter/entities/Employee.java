@@ -2,6 +2,14 @@ package com.hexaware.careercrafter.entities;
 
 import jakarta.persistence.*;
 
+/*
+ * Class Name: Employee
+ * Description: This class represents an employee entity
+ *              with details like name, email, and role within the company.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 @Entity
 @Table(name = "employees")
 public class Employee {

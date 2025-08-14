@@ -8,9 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+/*
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 
 @RestController
 @RequestMapping("/api/job-seekers")
@@ -21,30 +28,35 @@ public class JobSeekerController {
     @Autowired
     private IJobSeekerService jobSeekerService;
 
+  //  @PreAuthorize("hasRole('employee')")
     @PostMapping("/create")
     public ResponseEntity<JobSeekerDto> createJobSeeker(@Valid @RequestBody JobSeekerDto jobSeekerDto) {
         logger.info("POST /api/job-seekers/create - Request to create JobSeeker with name: {}", jobSeekerDto.getFullName());
         return ResponseEntity.ok(jobSeekerService.createJobSeeker(jobSeekerDto));
     }
-
+    
+  //  @PreAuthorize("hasAnyRole('employee','job_seeker')")
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<JobSeekerDto> getJobSeekerById(@PathVariable int id) {
         logger.info("GET /api/job-seekers/getbyid/{} - Fetch JobSeeker details", id);
         return ResponseEntity.ok(jobSeekerService.getJobSeekerById(id));
     }
 
+  //  @PreAuthorize("hasRole('employee')")
     @GetMapping("/getall")
     public ResponseEntity<List<JobSeekerDto>> getAllJobSeekers() {
         logger.info("GET /api/job-seekers/getall - Fetch all JobSeekers");
         return ResponseEntity.ok(jobSeekerService.getAllJobSeekers());
     }
 
+  //  @PreAuthorize("hasAnyRole('employee','job_seeker')")
     @PutMapping("/update/{id}")
     public ResponseEntity<JobSeekerDto> updateJobSeeker(@PathVariable int id, @Valid @RequestBody JobSeekerDto jobSeekerDto) {
         logger.info("PUT /api/job-seekers/update/{} - Update JobSeeker", id);
         return ResponseEntity.ok(jobSeekerService.updateJobSeeker(id, jobSeekerDto));
     }
 
+ //   @PreAuthorize("hasRole('employee')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteJobSeeker(@PathVariable int id) {
         logger.info("DELETE /api/job-seekers/delete/{} - Delete JobSeeker", id);

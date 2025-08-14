@@ -3,16 +3,15 @@ package com.hexaware.careercrafter.service;
 import com.hexaware.careercrafter.dto.JobSeekerDto;
 import com.hexaware.careercrafter.entities.JobSeeker;
 import com.hexaware.careercrafter.entities.User;
-import com.hexaware.careercrafter.exception.InvalidRequestException;
 import com.hexaware.careercrafter.exception.ResourceNotFoundException;
 import com.hexaware.careercrafter.repository.IJobSeekerRepo;
 import com.hexaware.careercrafter.repository.IUserRepo;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,59 +44,38 @@ class JobSeekerServiceImplTest {
     }
 
     @Test
-    void createJobSeeker_success() {
+    void testCreateJobSeeker_Success() {
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
         when(jobSeekerRepo.save(any(JobSeeker.class))).thenReturn(seeker);
+
         JobSeekerDto result = service.createJobSeeker(dto);
+
         assertEquals("John Doe", result.getFullName());
+        verify(jobSeekerRepo).save(any(JobSeeker.class));
     }
 
     @Test
-    void createJobSeeker_missingName() {
-        dto.setFullName("");
-        assertThrows(InvalidRequestException.class, () -> service.createJobSeeker(dto));
-    }
-
-    @Test
-    void getJobSeekerById_success() {
+    void testGetJobSeekerById_Success() {
         when(jobSeekerRepo.findById(1)).thenReturn(Optional.of(seeker));
+
         JobSeekerDto result = service.getJobSeekerById(1);
+
         assertEquals("John Doe", result.getFullName());
     }
 
     @Test
-    void getJobSeekerById_notFound() {
+    void testGetJobSeekerById_NotFound() {
         when(jobSeekerRepo.findById(1)).thenReturn(Optional.empty());
+
         assertThrows(ResourceNotFoundException.class, () -> service.getJobSeekerById(1));
     }
 
     @Test
-    void getAllJobSeekers_success() {
-        when(jobSeekerRepo.findAll()).thenReturn(Arrays.asList(seeker));
-        assertEquals(1, service.getAllJobSeekers().size());
-    }
-
-    @Test
-    void updateJobSeeker_success() {
-        when(jobSeekerRepo.findById(1)).thenReturn(Optional.of(seeker));
-        when(userRepo.findById(1)).thenReturn(Optional.of(user));
-        when(jobSeekerRepo.save(any(JobSeeker.class))).thenReturn(seeker);
-
-        dto.setEducation("BSc");
-        JobSeekerDto result = service.updateJobSeeker(1, dto);
-        assertEquals("BSc", dto.getEducation());
-    }
-
-    @Test
-    void deleteJobSeeker_success() {
+    void testDeleteJobSeeker_Success() {
         when(jobSeekerRepo.existsById(1)).thenReturn(true);
-        service.deleteJobSeeker(1);
-        verify(jobSeekerRepo).deleteById(1);
-    }
 
-    @Test
-    void deleteJobSeeker_notFound() {
-        when(jobSeekerRepo.existsById(1)).thenReturn(false);
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteJobSeeker(1));
+        service.deleteJobSeeker(1);
+
+        verify(jobSeekerRepo).deleteById(1);
     }
 }

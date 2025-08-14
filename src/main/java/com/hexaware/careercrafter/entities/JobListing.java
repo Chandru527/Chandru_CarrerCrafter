@@ -5,6 +5,16 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
+/*
+ * Class Name: JobListing
+ * Description: This class represents a job listing entity
+ *              with properties like title, description, and location.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
+
 @Entity
 @Table(name = "job_listings")
 public class JobListing {

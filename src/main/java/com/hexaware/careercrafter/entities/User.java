@@ -3,6 +3,14 @@ package com.hexaware.careercrafter.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+/*
+ * Class Name: User
+ * Description: This class represents a user entity
+ *              for authentication and role management in the CareerCrafter system.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 @Entity
 @Table(name = "users")
 public class User {

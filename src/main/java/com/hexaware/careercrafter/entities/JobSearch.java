@@ -3,6 +3,14 @@ package com.hexaware.careercrafter.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/*
+ * Class Name: JobSearch
+ * Description: This class represents a job search entity
+ *              containing search preferences and criteria set by a job seeker.
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
+
 @Entity
 @Table(name = "job_searches")
 @Getter
