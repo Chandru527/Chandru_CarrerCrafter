@@ -18,6 +18,15 @@ import com.hexaware.careercrafter.repository.IApplicationRepo;
 import com.hexaware.careercrafter.repository.IJobListingRepo;
 import com.hexaware.careercrafter.repository.IJobSeekerRepo;
 
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
+
 @Service
 public class ApplicationServiceImpl implements IApplicationService {
 
@@ -118,6 +127,16 @@ public class ApplicationServiceImpl implements IApplicationService {
         logger.info("Application deleted successfully with id: {}", id);
     }
 
+    
+    @Override
+    public List<ApplicationDto> getApplicationsByJobSeekerId(int jobSeekerId) {
+        logger.info("Fetching applications for JobSeekerId: {}", jobSeekerId);
+        return applicationRepo.findByJobSeeker_JobSeekerId(jobSeekerId)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+    
     private void validateApplicationDto(ApplicationDto dto) {
         if (dto.getStatus() == null || dto.getStatus().isBlank()) {
             logger.warn("Validation failed: Application status missing");

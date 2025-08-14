@@ -10,7 +10,6 @@ import lombok.Data;
  * Date: 13-Aug-2025
  */
 
-
 @Data
 public class JobListingDto {
 
@@ -27,7 +26,6 @@ public class JobListingDto {
     @NotBlank(message = "Qualifications are required")
     private String qualifications;
 
-
     @NotBlank(message = "Location is required")
     private String location;
     
@@ -37,6 +35,6 @@ public class JobListingDto {
     @NotNull(message = "Posted date is required")
     private LocalDate postedDate;
 
-    @NotNull(message = "Employee ID is required")
-    private Integer employeeId;
+    @NotNull(message = "Employer ID is required")
+    private Integer employerId;
 }

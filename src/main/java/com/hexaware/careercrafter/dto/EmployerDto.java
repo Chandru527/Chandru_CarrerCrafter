@@ -8,11 +8,10 @@ import lombok.Data;
  * Date: 13-Aug-2025
  */
 
-
 @Data
-public class EmployeeDto {
+public class EmployerDto {
 
-    private int employeeId;
+    private int employerId;
 
     @NotBlank(message = "Company name is required")
     @Size(min = 2, max = 100, message = "Company name must be between 2 and 100 characters")

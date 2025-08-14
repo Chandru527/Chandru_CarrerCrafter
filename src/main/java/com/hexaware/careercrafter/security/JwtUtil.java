@@ -13,6 +13,15 @@ import java.security.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
 @Component
 public class JwtUtil {
     
@@ -29,17 +38,17 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
         try {
-            // First try to use the secret directly as a Base64 encoded key
+           
             try {
                 byte[] decodedKey = Base64.getDecoder().decode(secret.trim());
                 this.key = Keys.hmacShaKeyFor(decodedKey);
                 logger.info("JWT secret successfully initialized as Base64 encoded key");
             } catch (IllegalArgumentException e) {
-                // If Base64 decoding fails, use the raw string as UTF-8 bytes
+               
                 logger.warn("JWT secret is not Base64 encoded - using raw string (less secure)");
                 byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
                 
-                // Ensure the key meets minimum length requirement for HS256 (256 bits/32 bytes)
+               
                 if (keyBytes.length < 32) {
                     byte[] paddedKey = new byte[32];
                     System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 32));
@@ -49,7 +58,7 @@ public class JwtUtil {
                 }
             }
             
-            // Test the key by generating a sample token
+           
             generateToken("test", "ROLE_TEST");
             logger.debug("JWT initialization test successful");
             

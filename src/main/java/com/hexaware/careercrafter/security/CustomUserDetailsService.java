@@ -6,6 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

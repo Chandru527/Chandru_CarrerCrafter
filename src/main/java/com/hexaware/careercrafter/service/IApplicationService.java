@@ -9,4 +9,6 @@ public interface IApplicationService {
     List<ApplicationDto> getAllApplications();
     ApplicationDto updateApplication(int id, ApplicationDto applicationDto);
     void deleteApplication(int id);
+    
+    List<ApplicationDto> getApplicationsByJobSeekerId(int jobSeekerId);
 }

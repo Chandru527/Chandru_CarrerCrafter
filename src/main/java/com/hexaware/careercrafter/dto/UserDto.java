@@ -9,7 +9,6 @@ import lombok.Data;
  * Date: 13-Aug-2025
  */
 
-
 @Data
 public class UserDto {
 
@@ -28,6 +27,6 @@ public class UserDto {
     private String password;
 
     @NotBlank(message = "Role is required")
-    @Pattern(regexp = "^(employee|job_seeker)$", message = "Role must be 'employee' or 'job_seeker'")
+    @Pattern(regexp = "^(employer|job_seeker)$", message = "Role must be 'employer' or 'job_seeker'")
     private String role;
 }

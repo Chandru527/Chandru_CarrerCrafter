@@ -19,6 +19,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
+
 @Configuration
 //@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {

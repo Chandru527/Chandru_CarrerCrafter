@@ -3,20 +3,20 @@ package com.hexaware.careercrafter.entities;
 import jakarta.persistence.*;
 
 /*
- * Class Name: Employee
- * Description: This class represents an employee entity
+ * Class Name: Employer
+ * Description: This class represents an employer entity
  *              with details like name, email, and role within the company.
  * Author: Chandru
  * Date: 13-Aug-2025
  */
 
 @Entity
-@Table(name = "employees")
-public class Employee {
+@Table(name = "employers")
+public class Employer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int employeeId;
+    private int employerId;
 
     private String companyName;
     private String companyDescription;
@@ -26,26 +26,22 @@ public class Employee {
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
-   
-    public Employee() {}
-    
+    public Employer() {}
 
-    public Employee(int employeeId, String companyName, String companyDescription, String position, User user) {
-		
-		this.employeeId = employeeId;
-		this.companyName = companyName;
-		this.companyDescription = companyDescription;
-		this.position = position;
-		this.user = user;
-	}
-
-
-    public int getEmployeeId() {
-        return employeeId;
+    public Employer(int employerId, String companyName, String companyDescription, String position, User user) {
+        this.employerId = employerId;
+        this.companyName = companyName;
+        this.companyDescription = companyDescription;
+        this.position = position;
+        this.user = user;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public int getEmployerId() {
+        return employerId;
+    }
+
+    public void setEmployerId(int employerId) {
+        this.employerId = employerId;
     }
 
     public String getCompanyName() {
@@ -65,14 +61,14 @@ public class Employee {
     }
 
     public String getPosition() {
-		return position;
-	}
+        return position;
+    }
 
-	public void setPosition(String position) {
-		this.position = position;
-	}
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
-	public User getUser() {
+    public User getUser() {
         return user;
     }
 

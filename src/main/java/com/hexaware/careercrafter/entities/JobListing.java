@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-
 /*
  * Class Name: JobListing
  * Description: This class represents a job listing entity
@@ -13,7 +12,6 @@ import java.util.List;
  * Author: Chandru
  * Date: 13-Aug-2025
  */
-
 
 @Entity
 @Table(name = "job_listings")
@@ -31,30 +29,27 @@ public class JobListing {
     private LocalDate postedDate;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
-    private Employee employee;
+    @JoinColumn(name = "employer_id", referencedColumnName = "employerId")
+    private Employer employer;
 
     @OneToMany(mappedBy = "jobListing", cascade = CascadeType.ALL)
     private List<Application> applications;
 
     public JobListing() {}
     
-
     public JobListing(int jobListingId, String title, String description, String qualifications, String location,
-			double salary, LocalDate postedDate, Employee employee, List<Application> applications) {
-    	
-		this.jobListingId = jobListingId;
-		this.title = title;
-		this.description = description;
-		this.qualifications = qualifications;
-		this.location = location;
-		this.salary = salary;
-		this.postedDate = postedDate;
-		this.employee = employee;
-		this.applications = applications;
-	}
+                      double salary, LocalDate postedDate, Employer employer, List<Application> applications) {
+        this.jobListingId = jobListingId;
+        this.title = title;
+        this.description = description;
+        this.qualifications = qualifications;
+        this.location = location;
+        this.salary = salary;
+        this.postedDate = postedDate;
+        this.employer = employer;
+        this.applications = applications;
+    }
 
-   
     public int getJobListingId() {
         return jobListingId;
     }
@@ -95,29 +90,28 @@ public class JobListing {
         this.location = location;
     }
     
-
     public double getSalary() {
-		return salary;
-	}
-
-	public void setSalary(double salary) {
-		this.salary = salary;
-	}
-
-	public LocalDate getPostedDate() {
-		return postedDate;
-	}
-
-	public void setPostedDate(LocalDate postedDate) {
-		this.postedDate = postedDate;
-	}
-
-	public Employee getEmployee() {
-        return employee;
+        return salary;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public LocalDate getPostedDate() {
+        return postedDate;
+    }
+
+    public void setPostedDate(LocalDate postedDate) {
+        this.postedDate = postedDate;
+    }
+
+    public Employer getEmployer() {
+        return employer;
+    }
+
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
     }
 
     public List<Application> getApplications() {

@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hexaware.careercrafter.dto.JobListingDto;
-import com.hexaware.careercrafter.entities.Employee;
+import com.hexaware.careercrafter.entities.Employer;
 import com.hexaware.careercrafter.entities.JobListing;
 import com.hexaware.careercrafter.exception.InvalidRequestException;
 import com.hexaware.careercrafter.exception.ResourceNotFoundException;
-import com.hexaware.careercrafter.repository.IEmployeeRepo;
+import com.hexaware.careercrafter.repository.IEmployerRepo;
 import com.hexaware.careercrafter.repository.IJobListingRepo;
+
+/*
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ */
 
 @Service
 public class JobListingServiceImpl implements IJobListingService {
@@ -25,7 +30,7 @@ public class JobListingServiceImpl implements IJobListingService {
     private IJobListingRepo jobListingRepo;
 
     @Autowired
-    private IEmployeeRepo employeeRepo;
+    private IEmployerRepo employerRepo;
 
     @Override
     public JobListingDto createJobListing(JobListingDto jobListingDto) {
@@ -35,9 +40,9 @@ public class JobListingServiceImpl implements IJobListingService {
             logger.warn("Job title is missing");
             throw new InvalidRequestException("Job title is required");
         }
-        if (jobListingDto.getEmployeeId() == null) {
-            logger.warn("Employee ID is missing");
-            throw new InvalidRequestException("Employee ID is required");
+        if (jobListingDto.getEmployerId() == null) {
+            logger.warn("Employer ID is missing");
+            throw new InvalidRequestException("Employer ID is required");
         }
 
         JobListing savedJobListing = jobListingRepo.save(mapToEntity(jobListingDto));
@@ -83,13 +88,13 @@ public class JobListingServiceImpl implements IJobListingService {
         existingJobListing.setSalary(jobListingDto.getSalary());
         existingJobListing.setPostedDate(jobListingDto.getPostedDate());
 
-        if (jobListingDto.getEmployeeId() != null) {
-            Employee employee = employeeRepo.findById(jobListingDto.getEmployeeId())
+        if (jobListingDto.getEmployerId() != null) {
+            Employer employer = employerRepo.findById(jobListingDto.getEmployerId())
                     .orElseThrow(() -> {
-                        logger.error("Employee not found with id: {}", jobListingDto.getEmployeeId());
-                        return new ResourceNotFoundException("Employee not found with id: " + jobListingDto.getEmployeeId());
+                        logger.error("Employer not found with id: {}", jobListingDto.getEmployerId());
+                        return new ResourceNotFoundException("Employer not found with id: " + jobListingDto.getEmployerId());
                     });
-            existingJobListing.setEmployee(employee);
+            existingJobListing.setEmployer(employer);
         }
 
         JobListing updatedJobListing = jobListingRepo.save(existingJobListing);
@@ -117,7 +122,7 @@ public class JobListingServiceImpl implements IJobListingService {
         dto.setLocation(jobListing.getLocation());
         dto.setSalary(jobListing.getSalary());
         dto.setPostedDate(jobListing.getPostedDate());
-        dto.setEmployeeId(jobListing.getEmployee() != null ? jobListing.getEmployee().getEmployeeId() : null);
+        dto.setEmployerId(jobListing.getEmployer() != null ? jobListing.getEmployer().getEmployerId() : null);
         return dto;
     }
 
@@ -131,13 +136,13 @@ public class JobListingServiceImpl implements IJobListingService {
         jobListing.setSalary(dto.getSalary());
         jobListing.setPostedDate(dto.getPostedDate());
 
-        if (dto.getEmployeeId() != null) {
-            Employee employee = employeeRepo.findById(dto.getEmployeeId())
+        if (dto.getEmployerId() != null) {
+            Employer employer = employerRepo.findById(dto.getEmployerId())
                     .orElseThrow(() -> {
-                        logger.error("Employee not found with id: {}", dto.getEmployeeId());
-                        return new ResourceNotFoundException("Employee not found with id: " + dto.getEmployeeId());
+                        logger.error("Employer not found with id: {}", dto.getEmployerId());
+                        return new ResourceNotFoundException("Employer not found with id: " + dto.getEmployerId());
                     });
-            jobListing.setEmployee(employee);
+            jobListing.setEmployer(employer);
         }
 
         return jobListing;

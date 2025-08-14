@@ -31,28 +31,25 @@ public class User {
     private String role; 
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Employee employee;
+    private Employer employer;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private JobSeeker jobSeeker;
 
-  
     public User() {}
     
+    public User(int userId, String name, String email, String password, String role, Employer employer,
+                JobSeeker jobSeeker) {
+        super();
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.employer = employer;
+        this.jobSeeker = jobSeeker;
+    }
 
-    public User(int userId, String name, String email, String password, String role, Employee employee,
-			JobSeeker jobSeeker) {
-		super();
-		this.userId = userId;
-		this.name = name;
-		this.email = email;
-		this.password = password;
-		this.role = role;
-		this.employee = employee;
-		this.jobSeeker = jobSeeker;
-	}
-
-   
     public int getUserId() {
         return userId;
     }
@@ -93,12 +90,12 @@ public class User {
         this.role = role;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Employer getEmployer() {
+        return employer;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
     }
 
     public JobSeeker getJobSeeker() {

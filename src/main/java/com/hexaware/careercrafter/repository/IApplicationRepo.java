@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IApplicationRepo extends JpaRepository<Application, Integer> {
 
-   
+	 List<Application> findByJobSeeker_JobSeekerId(int jobSeekerId);
 }
