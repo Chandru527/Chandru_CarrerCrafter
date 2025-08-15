@@ -29,7 +29,7 @@ public class ApplicationController {
     @Autowired
     private IApplicationService applicationService;
 
-   // @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
+    @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
     @PostMapping("/apply")
     public ResponseEntity<ApplicationDto> createApplication(@Valid @RequestBody ApplicationDto applicationDto) {
         logger.info("POST /api/applications/create - Creating application for JobSeekerId: {} and JobListingId: {}",
@@ -37,21 +37,21 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.createApplication(applicationDto));
     }
 
-   // @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
+    @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<ApplicationDto> getApplicationById(@PathVariable int id) {
         logger.info("GET /api/applications/getbyid/{} - Fetching application", id);
         return ResponseEntity.ok(applicationService.getApplicationById(id));
     }
 
-   // @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasRole('employer')")
     @GetMapping("/getall")
     public ResponseEntity<List<ApplicationDto>> getAllApplications() {
         logger.info("GET /api/applications/getall - Fetching all applications");
         return ResponseEntity.ok(applicationService.getAllApplications());
     }
 
-   // @PreAuthorize("hasAnyRole('employer', 'job_seeker')") 
+    @PreAuthorize("hasAnyRole('employer', 'job_seeker')") 
     @PutMapping("/update/{id}")
     public ResponseEntity<ApplicationDto> updateApplication(@PathVariable int id,
                                                              @Valid @RequestBody ApplicationDto applicationDto) {
@@ -59,14 +59,15 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.updateApplication(id, applicationDto));
     }
 
-   // @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasRole('employer')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteApplication(@PathVariable int id) {
         logger.info("DELETE /api/applications/delete/{} - Deleting application", id);
         applicationService.deleteApplication(id);
         return ResponseEntity.ok("Application deleted successfully");
     }
-    
+
+    @PreAuthorize("hasAnyRole('employer', 'job_seeker')") 
     @GetMapping("/seeker/{jobSeekerId}")
     public ResponseEntity<List<ApplicationDto>> getApplicationsByJobSeekerId(@PathVariable int jobSeekerId) {
         logger.info("GET /api/applications/seeker/{} - Fetching applications", jobSeekerId);

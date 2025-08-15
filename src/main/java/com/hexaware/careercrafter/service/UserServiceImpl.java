@@ -14,6 +14,14 @@ import com.hexaware.careercrafter.exception.DuplicateResourceException;
 import com.hexaware.careercrafter.exception.ResourceNotFoundException;
 import com.hexaware.careercrafter.repository.IUserRepo;
 
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
 @Service
 public class UserServiceImpl implements IUserService {
 

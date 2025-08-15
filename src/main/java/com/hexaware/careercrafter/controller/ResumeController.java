@@ -28,35 +28,35 @@ public class ResumeController {
     @Autowired
     private IResumeService resumeService;
 
-  //  @PreAuthorize("hasRole('job_seeker')")
+    @PreAuthorize("hasRole('job_seeker')")
     @PostMapping("/create")
     public ResponseEntity<ResumeDto> createResume(@Valid @RequestBody ResumeDto resumeDto) {
         logger.info("POST /api/resumes/create - Creating resume for JobSeekerId: {}", resumeDto.getJobSeekerId());
         return ResponseEntity.ok(resumeService.createResume(resumeDto));
     }
 
-  //  @PreAuthorize("hasAnyRole('employer','job_seeker')")
+    @PreAuthorize("hasAnyRole('employer','job_seeker')")
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<ResumeDto> getResumeById(@PathVariable int id) {
         logger.info("GET /api/resumes/getbyid/{} - Fetching resume", id);
         return ResponseEntity.ok(resumeService.getResumeById(id));
     }
 
-  //  @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasRole('employer')")
     @GetMapping("/getall")
     public ResponseEntity<List<ResumeDto>> getAllResumes() {
         logger.info("GET /api/resumes/getall - Fetching all resumes");
         return ResponseEntity.ok(resumeService.getAllResumes());
     }
 
-  //  @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasRole('employer')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ResumeDto> updateResume(@PathVariable int id, @Valid @RequestBody ResumeDto resumeDto) {
         logger.info("PUT /api/resumes/update/{} - Updating resume", id);
         return ResponseEntity.ok(resumeService.updateResume(id, resumeDto));
     }
 
-  //  @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasRole('employer')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteResume(@PathVariable int id) {
         logger.info("DELETE /api/resumes/delete/{} - Deleting resume", id);

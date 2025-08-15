@@ -1,5 +1,13 @@
 package com.hexaware.careercrafter.service;
 
+/*
+ * 
+ * Author: Chandru
+ * Date: 13-Aug-2025
+ * 
+ * 
+ */
+
 import com.hexaware.careercrafter.dto.UserDto;
 import com.hexaware.careercrafter.entities.User;
 import com.hexaware.careercrafter.exception.ResourceNotFoundException;
