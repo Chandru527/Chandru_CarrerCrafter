@@ -10,9 +10,11 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.security.Key;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /*
  * 
@@ -24,9 +26,9 @@ import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtUtil {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-    
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -38,17 +40,14 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
         try {
-           
             try {
                 byte[] decodedKey = Base64.getDecoder().decode(secret.trim());
                 this.key = Keys.hmacShaKeyFor(decodedKey);
                 logger.info("JWT secret successfully initialized as Base64 encoded key");
             } catch (IllegalArgumentException e) {
-               
                 logger.warn("JWT secret is not Base64 encoded - using raw string (less secure)");
                 byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-                
-               
+
                 if (keyBytes.length < 32) {
                     byte[] paddedKey = new byte[32];
                     System.arraycopy(keyBytes, 0, paddedKey, 0, Math.min(keyBytes.length, 32));
@@ -57,11 +56,11 @@ public class JwtUtil {
                     this.key = Keys.hmacShaKeyFor(keyBytes);
                 }
             }
-            
-           
-            generateToken("test", "ROLE_TEST");
+
+            // test token
+            generateToken("test", "employer");
             logger.debug("JWT initialization test successful");
-            
+
         } catch (Exception e) {
             logger.error("Failed to initialize JWT secret", e);
             throw new IllegalStateException("JWT initialization failed", e);
@@ -71,7 +70,7 @@ public class JwtUtil {
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)
+                .claim("role", role) // still supports single role
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -84,6 +83,21 @@ public class JwtUtil {
 
     public String extractRole(String token) throws JwtException {
         return extractAllClaims(token).get("role", String.class);
+    }
+
+    // ✅ NEW METHOD to support list of roles (without ROLE_ prefix)
+    public List<String> extractRoles(String token) throws JwtException {
+        Claims claims = extractAllClaims(token);
+
+        // single role case (what you have now)
+        String role = claims.get("role", String.class);
+        if (role != null) {
+            return Collections.singletonList(role);
+        }
+
+        // if later you add multiple roles
+        List<String> roles = claims.get("roles", List.class);
+        return roles != null ? roles : Collections.emptyList();
     }
 
     public boolean validateToken(String token, String username) {

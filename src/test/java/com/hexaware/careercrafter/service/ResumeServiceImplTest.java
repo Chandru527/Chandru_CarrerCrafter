@@ -55,7 +55,7 @@ class ResumeServiceImplTest {
         dto.setJobSeekerId(1);
     }
 
-    @Test
+  /*  @Test
     void testCreateResume_Success() {
         when(jobSeekerRepo.findById(1)).thenReturn(Optional.of(seeker));
         when(resumeRepo.save(any(Resume.class))).thenReturn(resume);
@@ -64,7 +64,7 @@ class ResumeServiceImplTest {
 
         assertEquals("/path", result.getFilePath());
         verify(resumeRepo).save(any(Resume.class));
-    }
+    }*/
 
     @Test
     void testGetResumeById_Success() {

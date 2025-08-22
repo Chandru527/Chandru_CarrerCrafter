@@ -10,53 +10,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-/*
- * Author: Chandru
- * Date: 13-Aug-2025
- */
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/resumes")
+@Tag(name = "Resumes", description = "APIs for resume upload, update, retrieval, and deletion")
 public class ResumeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResumeController.class); // 🔹 Logger
+    private static final Logger logger = LoggerFactory.getLogger(ResumeController.class);
 
     @Autowired
     private IResumeService resumeService;
 
-    @PreAuthorize("hasRole('job_seeker')")
-    @PostMapping("/create")
-    public ResponseEntity<ResumeDto> createResume(@Valid @RequestBody ResumeDto resumeDto) {
-        logger.info("POST /api/resumes/create - Creating resume for JobSeekerId: {}", resumeDto.getJobSeekerId());
-        return ResponseEntity.ok(resumeService.createResume(resumeDto));
+    @PreAuthorize("hasAuthority('job_seeker')")
+    @Operation(summary = "Upload a resume file for a job seeker")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    public ResponseEntity<ResumeDto> uploadResume(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("jobSeekerId") Integer jobSeekerId) {
+        logger.info("Uploading resume file for JobSeekerId: {}", jobSeekerId);
+        return ResponseEntity.ok(resumeService.uploadResume(file, jobSeekerId));
     }
-
-    @PreAuthorize("hasAnyRole('employer','job_seeker')")
+    
+    @PreAuthorize("hasAnyAuthority('employer', 'job_seeker')")
+    @Operation(summary = "Get resume metadata by resume ID")
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<ResumeDto> getResumeById(@PathVariable int id) {
         logger.info("GET /api/resumes/getbyid/{} - Fetching resume", id);
         return ResponseEntity.ok(resumeService.getResumeById(id));
     }
 
-    @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasAuthority('employer')")
+    @Operation(summary = "Get all resumes")
     @GetMapping("/getall")
     public ResponseEntity<List<ResumeDto>> getAllResumes() {
         logger.info("GET /api/resumes/getall - Fetching all resumes");
         return ResponseEntity.ok(resumeService.getAllResumes());
     }
 
-    @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasAuthority('job_seeker')")
+    @Operation(summary = "Update a resume by ID")
     @PutMapping("/update/{id}")
     public ResponseEntity<ResumeDto> updateResume(@PathVariable int id, @Valid @RequestBody ResumeDto resumeDto) {
         logger.info("PUT /api/resumes/update/{} - Updating resume", id);
         return ResponseEntity.ok(resumeService.updateResume(id, resumeDto));
     }
 
-    @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasAuthority('job_seeker')")
+    @Operation(summary = "Delete a resume by ID")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteResume(@PathVariable int id) {
         logger.info("DELETE /api/resumes/delete/{} - Deleting resume", id);

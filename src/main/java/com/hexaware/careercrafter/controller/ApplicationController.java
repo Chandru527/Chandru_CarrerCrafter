@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /*
  * Author: Chandru
  * Date: 13-Aug-2025
  */
 
-
 @RestController
 @RequestMapping("/api/applications")
+@Tag(name = "Applications", description = "API endpoints for job applications")
 public class ApplicationController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationController.class); // 🔹 Logger
@@ -29,7 +31,8 @@ public class ApplicationController {
     @Autowired
     private IApplicationService applicationService;
 
-    @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
+    @PreAuthorize("hasAnyAuthority('job_seeker')")
+    @Operation(summary = "Create an application for a job listing")
     @PostMapping("/apply")
     public ResponseEntity<ApplicationDto> createApplication(@Valid @RequestBody ApplicationDto applicationDto) {
         logger.info("POST /api/applications/create - Creating application for JobSeekerId: {} and JobListingId: {}",
@@ -37,21 +40,24 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.createApplication(applicationDto));
     }
 
-    @PreAuthorize("hasAnyRole('employer', 'job_seeker')")
+    @PreAuthorize("hasAnyAuthority('employer', 'job_seeker')")
+    @Operation(summary = "Get an application by its ID")
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<ApplicationDto> getApplicationById(@PathVariable int id) {
         logger.info("GET /api/applications/getbyid/{} - Fetching application", id);
         return ResponseEntity.ok(applicationService.getApplicationById(id));
     }
 
-    @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasAuthority('employer')")
+    @Operation(summary = "Get all applications")
     @GetMapping("/getall")
     public ResponseEntity<List<ApplicationDto>> getAllApplications() {
         logger.info("GET /api/applications/getall - Fetching all applications");
         return ResponseEntity.ok(applicationService.getAllApplications());
     }
 
-    @PreAuthorize("hasAnyRole('employer', 'job_seeker')") 
+    @PreAuthorize("hasAnyAuthority('employer', 'job_seeker')")
+    @Operation(summary = "Update an application by its ID")
     @PutMapping("/update/{id}")
     public ResponseEntity<ApplicationDto> updateApplication(@PathVariable int id,
                                                              @Valid @RequestBody ApplicationDto applicationDto) {
@@ -59,7 +65,8 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.updateApplication(id, applicationDto));
     }
 
-    @PreAuthorize("hasRole('employer')")
+    @PreAuthorize("hasAuthority('employer')")
+    @Operation(summary = "Delete an application by its ID")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteApplication(@PathVariable int id) {
         logger.info("DELETE /api/applications/delete/{} - Deleting application", id);
@@ -67,7 +74,8 @@ public class ApplicationController {
         return ResponseEntity.ok("Application deleted successfully");
     }
 
-    @PreAuthorize("hasAnyRole('employer', 'job_seeker')") 
+    @PreAuthorize("hasAnyAuthority('employer', 'job_seeker')")
+    @Operation(summary = "Get applications by job seeker ID")
     @GetMapping("/seeker/{jobSeekerId}")
     public ResponseEntity<List<ApplicationDto>> getApplicationsByJobSeekerId(@PathVariable int jobSeekerId) {
         logger.info("GET /api/applications/seeker/{} - Fetching applications", jobSeekerId);
